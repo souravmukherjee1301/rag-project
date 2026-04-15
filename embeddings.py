@@ -11,6 +11,9 @@ def create_vector_store(file_path):
 
     vectorstore = FAISS.from_documents(chunks, embeddings)
 
+    # Save the vector store locally for later use
+    vectorstore.save_local("faiss_index")
+    
     return vectorstore
 
 if __name__ == "__main__":
