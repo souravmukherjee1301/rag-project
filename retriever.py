@@ -18,8 +18,8 @@ def search_query(query):
     vector_db = load_vector_db() # Ensure this matches the path where the vector store was saved during creation
 
     # Step 2: Search similar chunks
-    # This will return the top 3 most similar chunks from the vector DB based on the query
-    results = vector_db.similarity_search(query, k=3) # Adjust k for more or fewer results
+    # This will return the top 5 most similar chunks from the vector DB based on the query
+    results = vector_db.similarity_search(query, k=5) # Adjust k for more or fewer results
 
     # Step 3: Return results
     

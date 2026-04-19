@@ -9,10 +9,13 @@ def generate_answer(query):
     context = "\n".join([doc.page_content for doc in docs])
 
     prompt = f"""
-    You are a helpful AI assistant.
+    You are an intelligent AI assistant.
 
-    Answer ONLY from the given context.
-    If answer not found, say "Not in document".
+    Use ONLY the information from the provided context.
+    Do NOT make up answers.
+    If the answer is not in the context, say: "Not found in document".
+
+    Give a clear and structured answer.
 
     Context:
     {context}
@@ -25,11 +28,27 @@ def generate_answer(query):
 
     response = qa_pipeline(prompt, max_length=200, do_sample=False)
 
-    return response[0]['generated_text']
+    answer = response[0]['generated_text']
+
+    # Clean output
+    answer = answer.split("Answer:")[-1].strip()
+
+    return answer
 
 if __name__ == "__main__":
     query = input("Ask your question: ")
+
+    # Step 1: Get docs (important)
+    docs = search_query(query)
+
+    # Step 2: Generate answer
     answer = generate_answer(query)
 
     print("\n🤖 AI Answer:\n")
     print(answer)
+
+    # Step 3: Show sources
+    print("\n📚 Sources Used:")
+    for i, doc in enumerate(docs):
+        print(f"\n📄 Source {i+1}:")
+        print(doc.page_content[:200])
