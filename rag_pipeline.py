@@ -33,7 +33,7 @@ def generate_answer(query):
     # Clean output
     answer = answer.split("Answer:")[-1].strip()
 
-    return answer
+    return answer, docs
 
 if __name__ == "__main__":
     query = input("Ask your question: ")
@@ -44,7 +44,7 @@ if __name__ == "__main__":
     # Step 2: Generate answer
     answer = generate_answer(query)
 
-    print("\n🤖 AI Answer:\n")
+    print("\n AI Answer:\n")
     print(answer)
 
     # Step 3: Show sources
