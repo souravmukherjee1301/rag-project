@@ -1,4 +1,4 @@
-from embeddings import create_vector_store
+from embeddings import create_and_save_db, load_vector_db
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 
