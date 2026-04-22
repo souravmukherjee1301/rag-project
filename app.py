@@ -4,6 +4,9 @@ import os
 from embeddings import create_and_save_db
 from rag_pipeline import generate_answer
 
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
 st.set_page_config(page_title="RAG App", layout="centered")
 
 st.title("AI Document Q&A System")
@@ -27,20 +30,27 @@ if uploaded_file is not None:
 
         st.success("Document processed!")
 
-    # Ask Question
-    query = st.text_input("Ask a question:")
+    # Chat input
+    query = st.chat_input("Ask your question")
 
-    if st.button("Get Answer"):
-        if query:
-            with st.spinner("Thinking..."):
-                answer, docs = generate_answer(query)
+    # query = st.text_input("Ask your question")
 
-            st.subheader("Answer:")
-            st.write(answer)
+    if query:
+        # st.write(f"Your question: {query}")
+        # Save user message
+        st.session_state.messages.append(
+            {"role": "user", "content": query})
 
-            st.subheader("Sources:")
-            for i, doc in enumerate(docs):
-                st.write(f"**Source {i+1}:**")
-                st.write(doc.page_content[:200])
-        else:
-            st.warning("Please enter a question")
+        with st.spinner("Thinking..."):
+            answer, docs = generate_answer(query)
+
+        # Save AI response
+        st.session_state.messages.append(
+            {"role": "assistant", "content": answer})
+
+        # Display chat history
+        for msg in st.session_state.messages:
+            if msg["role"] == "user":
+                st.chat_message("user").write(msg["content"])
+            else:
+                st.chat_message("assistant").write(msg["content"])

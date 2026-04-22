@@ -1,7 +1,7 @@
 from transformers import pipeline
 from retriever import search_query
 
-qa_pipeline = pipeline("text-generation", model="google/flan-t5-base")
+qa_pipeline = pipeline("text-generation", model="gpt2") # Replace with your fine-tuned model if available
 
 def generate_answer(query):
     docs = search_query(query)
@@ -26,12 +26,26 @@ def generate_answer(query):
     Answer:
     """
 
-    response = qa_pipeline(prompt, max_length=200, do_sample=False)
+    response = qa_pipeline(
+    prompt,
+    max_new_tokens=220,
+    max_length=512,
+    do_sample=True,
+    temperature=0.7,
+    truncation=True,
+    return_full_text=False
+    )
 
     answer = response[0]['generated_text']
 
-    # Clean output
-    answer = answer.split("Answer:")[-1].strip()
+    # answer = response[0]['generated_text'].strip()
+
+    # print("RAW OUTPUT:", response)
+
+    if "Answer:" in answer:
+        answer = answer.split("Answer:")[1].strip()
+    else:
+        answer = answer.strip()
 
     return answer, docs
 
